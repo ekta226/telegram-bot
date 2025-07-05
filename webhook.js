@@ -2,7 +2,8 @@ require('dotenv').config();
 const axios = require('axios');
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
-const WEBHOOK_URL = 'https://teligrambot.netlify.app/webhook'; // Fixed URL with /webhook endpoint
+const WEBHOOK_URL = 'https://teligrambot.netlify.app/.netlify/functions/webhook'
+
 
 async function setWebhook() {
   try {
