@@ -1,13 +1,21 @@
 require('dotenv').config();
-const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { 
+  polling: {
+    interval: 1000,
+    autoStart: true,
+    params: {
+      timeout: 10
+    }
+  }
+});
 
-// Create the Telegram Bot
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+// Handle polling errors
+bot.on('polling_error', (error) => {
+  console.log('Polling error:', error.message);
+});
 
 // Handle incoming Telegram messages
 bot.on('message', async (msg) => {
@@ -17,7 +25,7 @@ bot.on('message', async (msg) => {
   if (!userMessage) return;
 
   if (userMessage.toLowerCase() === '/start') {
-    const welcomeMessage = `Hey I’m Shanaya! 💫\n\nTere liye ek mast motivation line layi hu — sun:\n\n✨ "Your dreams are big, so your efforts need to be even bigger — but you will make it because you're not someone who gives up."`;
+    const welcomeMessage = `Hey I'm Shanaya! 💫\n\nTere liye ek mast motivation line layi hu — sun:\n\n✨ "Your dreams are big, so your efforts need to be even bigger — but you will make it because you're not someone who gives up."`;
     bot.sendMessage(chatId, welcomeMessage);
     return;
   }
@@ -36,7 +44,8 @@ bot.on('message', async (msg) => {
       {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 30000
       }
     );
 
@@ -44,16 +53,8 @@ bot.on('message', async (msg) => {
     bot.sendMessage(chatId, reply || '🤖 Gemini did not return a response.');
   } catch (error) {
     console.error('Gemini Error:', error?.response?.data || error.message);
-    bot.sendMessage(chatId, '⚠️ Error talking to Gemini.');
+    bot.sendMessage(chatId, '⚠️ Error talking to Gemini. Please try again.');
   }
 });
 
-// Simple health check route
-app.get('/', (req, res) => {
-  res.send('🤖 Shanaya Bot is running!');
-});
-
-// Start the Express server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-});
+console.log('🤖 Local bot is running with polling...');

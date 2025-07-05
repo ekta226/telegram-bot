@@ -2,9 +2,11 @@
   "name": "rajputigirlekku_bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "local-index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node local-index.js",
+    "dev": "nodemon local-index.js",
+    "webhook": "node webhook.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

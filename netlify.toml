@@ -1,1 +1,10 @@
-functions = "functions"
+[build]
+  functions = "functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/webhook"
+  to = "/.netlify/functions/bot"
+  status = 200
